@@ -20,14 +20,11 @@ def saveData(link, cleanName):
 		file.write(url.text)
 
 
-roster = pd.read_csv('../../swimmers_female.csv')
-i = 0
+roster = pd.read_csv('../../swimmers_female_info.csv')
+
 for index, row in roster.iterrows():
 	name = row['Name']
-	if(i > 471):
-		callData(name)
-		#print(name)
-	i += 1
+	callData(name)
 
 
 
