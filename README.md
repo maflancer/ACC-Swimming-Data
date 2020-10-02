@@ -1,5 +1,9 @@
 # ACC-Swimming-Data
 
+## heroku app 
+main.py - this is the main python file used to run the interactive application at https://accswimming.herokuapp.com/
+data - the four .csv files that are used in main.py
+
 data.py - this python file used html files that were locally saved on my computer from swimcloud.com to generate csv files with swimmer data - the data is from the ACC Swimming and Diving Championship meets (male and female) from 2013-2020
 
 swimmers_male_info.csv - includes swimmer names, swimmer ID, team, and hometown
