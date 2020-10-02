@@ -16,16 +16,18 @@ data - the four .csv files that are used in main.py
 ## data scraping
 this folder has the scripts that can be used to download html files from swimcloud.com - the html files downloaded are then scraped in data.py which has three different csv files that can be produced - 
 
-1. swimmers_male_info.csv - includes swimmer names, swimmer ID, team, and hometown
-   swimmers_female_info.csv
+1. swimmers_male_info.csv
+   swimmers_female_info.csv - includes swimmer names, swimmer ID, team, and hometown
    
-2. swimmers_male_data.csv   - includes information for the points contributed to their team by each swimmer, in each of their seasons
-   swimmers_female_data.csv -        information about the  number of points each swimmer earned for  their  team  during  each  season (freshmen,sophomore, junior and senior) 
+2. swimmers_male_data.csv 
+   swimmers_female_data.csv - includes:information for the points contributed to their team by each swimmer, in each of their seasons
+                            -          information about the  number of points each swimmer earned for  their  team  during  each  season (freshmen,sophomore, junior and senior) 
                             -          the number of events they participated in each of these seasons along with the points per event (PPE). 
                             -          the PowerIndex which is an indicator of their high school recruiting rank. 
 
-3. swimmers_male_times.csv - includes the times of each swimmer at different events from the ACC finals (2013 - 2020)
-   swimmers_female_times.csv
+3. swimmers_male_times.csv 
+   swimmers_female_times.csv - includes the times of each swimmer at different events from the ACC finals (2013 - 2020)
+   
 -------------------------------------------------------------------------------------------------------------------------------
 
 Steps to download the html files necessary to run data.py - these steps should be able to output the csv files specified above
