@@ -8,6 +8,7 @@ import os
 
 roster = list()
 times = list()
+gender = 'female' #either female or male
 teams = ['228','280','77','34','394','425','60','53','405','73','336','174']
 meets_male = ['22396','28738','51300','76429','104707','118535','166310']
 meets_female = ['22373','28737','51800','76431','104673','118536','166285']
@@ -29,14 +30,12 @@ team_names = {'228' : 'Boston College',
 
 #adds every swimmer to roster list with season_id and team that are input
 def getRoster(season_id,team):
-	file_name = './Roster html/female/team-' + team + '_' + 'season_id-' + str(season_id) + '.html' #/male/ or /female/
+	file_name = './Roster html/' + gender + '/team-' + team + '_' + 'season_id-' + str(season_id) + '.html' 
 
 	with open(file_name, encoding = 'utf-8') as file:
 		soup = bs(file, 'html.parser')
 
 	team = team_names[team] #changes team from number to team name
-
-	print(team)
 
 	data = soup.find('table', attrs = {'class' : 'c-table-clean c-table-clean--middle table table-hover'}).find_all('tr')[1:] #finds table of player names
 
@@ -130,19 +129,19 @@ def numbersIndexes(numbers):
 
 #gets data for how many points swimmers scored in acc championship meet
 def getData(team,meet):
-	file_name = './Data html/female/meet_id-' + meet + '_' + 'team-' + team + '.html'  #/male/ or /female/
+	file_name = './Data html/' + gender + '/meet_id-' + meet + '_' + 'team-' + team + '.html'  
 
 	getPoints(file_name)
 
 	#check if page 2
 
-	file_name = './Data html/female/meet_id-' + meet + '_' + 'team-' + team + '-page2.html'  #/male/ or /female/
+	file_name = './Data html/' + gender + '/meet_id-' + meet + '_' + 'team-' + team + '-page2.html'  
 
 	if(os.path.isfile(file_name)):
-		print('page 2')
+		#print('page 2')
 		getPoints(file_name)
 	else:
-		print('NO page 2')
+		#print('NO page 2')
 
 def getPoints(file_name):
 	with open(file_name, encoding = 'utf-8') as file:
@@ -176,7 +175,7 @@ def getPoints(file_name):
 #returns power index for a swimmer
 def getPowerIndex(name, swimmer_id):
 	cleanName = name.replace(' ', '+')
-	file_name = './Recruiting html/female/' + cleanName + '.html'  #male or female
+	file_name = './Recruiting html/' + gender + "/" + cleanName + '.html'  
 
 	with open(file_name, encoding ='utf-8') as file:
 		soup = bs(file, 'html.parser')
@@ -211,7 +210,7 @@ def findEntries(link, swimmer_id):
 	
 	link = link.replace('/', '-')
 
-	file_name = './Entries html/female/' + link + '.html'  #/male/ or /female/
+	file_name = './Entries html/' + gender + "/" + link + '.html'  
 
 	with open(file_name, encoding ='utf-8') as file:
 		soup = bs(file,'html.parser')
@@ -340,14 +339,15 @@ def callRoster(team):
 		getRoster(start,team) 
 
 def callData(team):
-	for meet in meets_female:  #meets_male or meets_female
-		if(team == '174' and meet == '22373'): #for male put meet = 22396, for female meet = 22373
+	for meet in meetsToUse: 
+		if((team == '174' and meet == '22373') or (team == '174' and meet == '22396')):
 			print('') #louisville was not in acc for this year
 		else:	
 			getData(team,meet)
 
 def rosterToCsv():
-	file = open('swimmers_female_data.csv','w', newline = '', encoding ='utf-8')  #swimmers_male or swimmers_female
+	file_name = 'swimmers_' + gender + '_data.csv'
+	file = open(file_name,'w', newline = '', encoding ='utf-8')  
 	writer = csv.writer(file)
 
 	writer.writerow(['Name','Team','Swimmer_ID','hometown','Starting season','Power_Index','FR','Events-FR','Freshman_PPE', 'SO','Events-SO','Sophomore_PPE','JR','Events-JR','Junior_PPE','SR','Events-SR','Senior_PPE','Total_Points','Total_Events','Total_ppe']) #TOP ROW ON EXCEL SHEET
@@ -360,7 +360,8 @@ def rosterToCsv():
 	file.close()
 
 def rosterBasicDataToCsv():
-	file = open('swimmers_female_info.csv','w', newline = '', encoding ='utf-8')  #swimmers_male or swimmers_female
+	file_name = 'swimmers_' + gender + '_infoNEW.csv'
+	file = open(file_name,'w', newline = '', encoding ='utf-8')  
 	writer = csv.writer(file)
 
 	writer.writerow(['Name','Team','Swimmer_ID','Hometown'])
@@ -371,7 +372,8 @@ def rosterBasicDataToCsv():
 	file.close()
 
 def timesDataToCsv():
-	file = open('swimmers_female_times.csv', 'w', newline ='', encoding = 'utf-8') #swimmers_male or swimmers_female
+	file_name = 'swimmers_' + gender + '_times.csv'
+	file = open('swimmers_female_times.csv', 'w', newline ='', encoding = 'utf-8')
 
 	writer = csv.writer(file)
 
@@ -382,7 +384,13 @@ def timesDataToCsv():
 
 	file.close()
 
+
+
 #MAIN --------------------------------------------------------------------------------------
+if(gender == 'female'):
+	meetsToUse = meets_female
+else:
+	meetsToUse = meets_male
 
 for team in teams:
 	callRoster(team)
@@ -393,13 +401,8 @@ for team in teams:
 #only call one at a time ------------------------------------------------------
 
 #rosterToCsv()         			#call this for basic swimmer info as well as power index, points scored and number of events at the ACC championship meet
-#rosterBasicDataToCsv()     	#call this for basic swimmer info (name, team, swimmer_id, hometown)
-timesDataToCsv() 			    #call this for info on swimmers times and how they improved their times at the ACC championship meet (improvement(%))
-
-
-
-
-
+rosterBasicDataToCsv()     	#call this for basic swimmer info (name, team, swimmer_id, hometown)
+#timesDataToCsv() 			    #call this for info on swimmers times and how they improved their times at the ACC championship meet (improvement(%))
 
 
 
