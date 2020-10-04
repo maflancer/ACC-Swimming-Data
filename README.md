@@ -43,7 +43,7 @@ Steps to download the html files necessary to run data.py - these steps should b
 
 4. Run, in the Recruiting html folder, recruiting_male.py (in the male folder) and recruiting_female.py (in the female folder). These scripts are currently hard coded to use the names in swimmers_male_info.csv and swimmers_female_info.csv to download the html files from swimcloud.com that include the data for a swimmer's high school power index. This will be updated to take teams as input.
 
-5. Run data.py - this is currently hard coded to get the data from the female html folders (this will be updated to take gender as an input) - if you want to change the script to get male data you will have to change the line of code at line 11 (switch 'female' to 'male').
+5. Run data.py (may take around 20-30 minutes) - this is currently hard coded to get the data from the female html folders (this will be updated to take gender as an input) - if you want to change the script to get male data you will have to change the line of code at line 11 (switch 'female' to 'male').
 
      - After you have chosen if you want to get male or female data, you should go the bottom of the script where there are three function calls - rosterToCsv(), rosterBasicDataToCsv(), and timesDataToCsv(). Comment and uncomment out which functions you want to run and do not want to run. These functions will output the three csv files specified earlier. 
 
