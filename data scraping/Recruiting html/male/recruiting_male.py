@@ -20,7 +20,7 @@ def saveData(link, cleanName):
 		file.write(url.text)
 
 
-roster = pd.read_csv('../../swimmers_male.csv')
+roster = pd.read_csv('../../swimmers_male_info.csv')
 
 for index, row in roster.iterrows():
 	name = row['Name']
