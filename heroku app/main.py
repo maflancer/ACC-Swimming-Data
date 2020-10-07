@@ -23,7 +23,7 @@ acc_image_src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Atlan
                 '-Atlantic_Coast_Conference_logo.svg.png '
 
 teams = male_data['Team'].unique()
-
+years = male_data['Year'].unique()
 
 # ---------------------HELPER FUNCTIONS------------------------------
 
@@ -38,7 +38,6 @@ def convertTime(displayTime):
         print('')  # do nothing
     else:
         return float(displayTime)
-
 
 def addTimes(df):
     allPrelimTimes = []
@@ -57,7 +56,6 @@ def addTimes(df):
             allFinalYears.append(row['Year'])
 
     return allPrelimTimes, allPrelimYears, allFinalTimes, allFinalYears
-
 
 # ---------------------APP LAYOUT----------------------------------------------
 
@@ -87,32 +85,46 @@ def render_content(tab):
                     html.H6(children='Gender'),
                     dcc.Dropdown(
                         id='gender-dropdown',
-                        options=[{'label': 'Male', 'value': 'Male'}, {'label': 'Female', 'value': 'Female'}]
+                        options=[{'label': 'Male', 'value': 'Male'}, {'label': 'Female', 'value': 'Female'}],
+                        placeholder = 'Select a gender'
                     )
                 ],
-                    style={'width': '18%', 'float': 'left'}),
+                    style={'width': '13%', 'float': 'left'}),
 
                 html.Div([
                     html.H6(children='Team'),
                     dcc.Dropdown(
                         id='team-dropdown',
                         options=[{'label': i, 'value': i} for i in teams],
-                        value='Team'
+                        value='Team',
+                        placeholder = 'Select a team'
                     )
                 ],
-                    style={'width': '18%', 'float': 'left', 'margin-left': '30px'}),
+                    style={'width': '16%', 'float': 'left', 'margin-left': '30px'}),
+
+                html.Div([
+                    html.H6(children = 'Year'),
+                    dcc.Dropdown(
+                        id = 'year-dropdown',
+                        options = [{'label' : i, 'value' : i} for i in years],
+                        value = 'Year',
+                        multi = True,
+                        placeholder = 'Filter by year (optional)'
+                    )
+                ],
+                style = {'width' : '13%', 'float' : 'left', 'margin-left' : '30px'}),
 
                 html.Div([
                     html.H6(children='Swimmer'),
-                    dcc.Dropdown(id='player-dropdown')
+                    dcc.Dropdown(id='player-dropdown', placeholder = 'Select a swimmer')
                 ],
-                    style={'width': '18%', 'float': 'left', 'margin-left': '30px'}),
+                    style={'width': '13%', 'float': 'left', 'margin-left': '30px'}),
 
                 html.Div([
                     html.H6(children='Event'),
-                    dcc.Dropdown(id='event-dropdown')
+                    dcc.Dropdown(id='event-dropdown', placeholder = 'Select an event')
                 ],
-                    style={'width': '18%', 'float': 'left', 'margin-left': '30px'}),
+                    style={'width': '13%', 'float': 'left', 'margin-left': '30px'}),
 
                 html.Div([
                     dcc.Checklist(
@@ -147,26 +159,40 @@ def render_content(tab):
                     html.H6(children='Gender'),
                     dcc.Dropdown(
                         id='ppe-gender-dropdown',
-                        options=[{'label': 'Male', 'value': 'Male'}, {'label': 'Female', 'value': 'Female'}]
+                        options=[{'label': 'Male', 'value': 'Male'}, {'label': 'Female', 'value': 'Female'}],
+                        placeholder = 'Select a gender'
                     )
                 ],
-                    style={'width': '18%', 'float': 'left', 'margin-left': '80px'}),
+                    style={'width': '16%', 'float': 'left', 'margin-left': '60px'}),
 
                 html.Div([
                     html.H6(children='Team'),
                     dcc.Dropdown(
                         id='ppe-team-dropdown',
                         options=[{'label': i, 'value': i} for i in teams],
-                        value='Team'
+                        value='Team',
+                        placeholder = 'Select a team'
                     )
                 ],
-                    style={'width': '18%', 'float': 'left', 'margin-left': '80px'}),
+                    style={'width': '16%', 'float': 'left', 'margin-left': '60px'}),
+
+                html.Div([
+                    html.H6(children = 'Year'),
+                    dcc.Dropdown(
+                        id = 'ppe-year-dropdown',
+                        options = [{'label' : i, 'value' : i} for i in years],
+                        value = 'Year',
+                        multi = True,
+                        placeholder = 'Filter by year (optional)'
+                    )
+                ],
+                style = {'width' : '16%', 'float' : 'left', 'margin-left' : '60px'}),
 
                 html.Div([
                     html.H6(children='Swimmer'),
-                    dcc.Dropdown(id='ppe-player-dropdown')
+                    dcc.Dropdown(id='ppe-player-dropdown', placeholder = 'Select a swimmer')
                 ],
-                    style={'width': '18%', 'float': 'left', 'margin-left': '80px'}),
+                    style={'width': '16%', 'float': 'left', 'margin-left': '60px'}),
 
                 html.Div([
                     dcc.Checklist(
@@ -197,8 +223,9 @@ def render_content(tab):
 @app.callback(
     Output('player-dropdown', 'options'),
     [Input('team-dropdown', 'value'),
-     Input('gender-dropdown', 'value')])
-def set_player_options(selected_team, gender):
+     Input('gender-dropdown', 'value'),
+     Input('year-dropdown', 'value')])
+def set_player_options(selected_team, gender, selected_years):
     data = male_data
 
     if gender == 'Female':
@@ -206,10 +233,17 @@ def set_player_options(selected_team, gender):
 
     players = []
     swimmerIds = []
-    for index, row in data.iterrows():
-        if row['Team'] == selected_team and not row['Swimmer_ID'] in swimmerIds:
-            players.append({'label': row['Name'], 'value': row['Swimmer_ID']})
-            swimmerIds.append(row['Swimmer_ID'])
+
+    if(isinstance(selected_years, str) or len(selected_years) == 0):
+        for index, row in data.iterrows():
+            if row['Team'] == selected_team and not row['Swimmer_ID'] in swimmerIds:
+                players.append({'label' : row['Name'], 'value' : row['Swimmer_ID']})
+                swimmerIds.append(row['Swimmer_ID'])
+    else:
+        for index, row in data.iterrows():
+            if row['Team'] == selected_team and row['Year'] in selected_years and not row['Swimmer_ID'] in swimmerIds:
+                players.append({'label' : row['Name'], 'value' : row['Swimmer_ID']})
+                swimmerIds.append(row['Swimmer_ID'])
 
     return players
 
@@ -365,8 +399,9 @@ def update_graph(gender, team, Swimmer_ID, event, team_value, acc_value):
 @app.callback(
     Output('ppe-player-dropdown', 'options'),
     [Input('ppe-team-dropdown', 'value'),
-     Input('ppe-gender-dropdown', 'value')])
-def ppe_set_player_options(selected_team, gender):
+     Input('ppe-gender-dropdown', 'value'),
+     Input('ppe-year-dropdown', 'value')])
+def ppe_set_player_options(selected_team, gender, selected_years):
     data = male_ppe_data
 
     if (gender == 'Female'):
@@ -374,10 +409,25 @@ def ppe_set_player_options(selected_team, gender):
 
     players = []
     swimmerIds = []
-    for index, row in data.iterrows():
-        if row['Team'] == selected_team and not row['Swimmer_ID'] in swimmerIds:
-            players.append({'label': row['Name'], 'value': row['Swimmer_ID']})
-            swimmerIds.append(row['Swimmer_ID'])
+
+    if(isinstance(selected_years, str) or len(selected_years) == 0):
+        for index, row in data.iterrows():
+            if row['Team'] == selected_team and not row['Swimmer_ID'] in swimmerIds:
+                players.append({'label' : row['Name'], 'value' : row['Swimmer_ID']})
+                swimmerIds.append(row['Swimmer_ID'])
+    else:
+        for index, row in data.iterrows():
+            yearCheck = False
+            start = row['Starting season'] + 1997        #this gets the correct year from the season id where season id 17 = year 2014
+            yearValues = list(range(start, start + 4))   #creates list of years from start year to start year + 4 so it would be [2014 - 2018)
+            for year in yearValues:
+                if year in selected_years:
+                    yearCheck = True
+
+            if row['Team'] == selected_team and yearCheck is True and not row['Swimmer_ID'] in swimmerIds:
+                players.append({'label' : row['Name'], 'value' : row['Swimmer_ID']})
+                swimmerIds.append(row['Swimmer_ID'])
+
 
     return players
 
