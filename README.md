@@ -22,7 +22,7 @@ this folder has the scripts that can be used to download html files from swimclo
    
 2. swimmers_male_data.csv and
 
-   swimmers_female_data.csv - includes:information for the points contributed to their team by each swimmer, in each of their seasons 
+   swimmers_female_data.csv - includes: information for the points contributed to their team by each swimmer, in each of their seasons 
                             -          information about the  number of points each swimmer earned for  their  team  during  each  season (freshmen,sophomore, junior and senior) 
                             -          the number of events they participated in each of these seasons along with the points per event (PPE). 
                             -          the PowerIndex which is an indicator of their high school recruiting rank. 
