@@ -398,7 +398,7 @@ for team in teams:
 for team in teams:
 	callData(team)
 
-#only call one at a time ------------------------------------------------------
+#comment and uncomment which csv files you want to be generated ------------------------------------------------------
 
 #rosterToCsv()         			#call this for basic swimmer info as well as power index, points scored and number of events at the ACC championship meet
 rosterBasicDataToCsv()     	#call this for basic swimmer info (name, team, swimmer_id, hometown)
