@@ -148,7 +148,7 @@ for index, row in pitt_roster.iterrows():
 #addTimes(172052, 1100)
 #addTimes(362091, 1100)
 
-file_name = 'PITT_100FREE_TIMES.csv'
+file_name = 'PITT_100_FREE.csv'  
 
 file = open(file_name,'w', newline = '', encoding ='utf-8')  
 	
